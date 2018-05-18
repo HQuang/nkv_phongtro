@@ -30,11 +30,12 @@
 						<a href="{VIEW.link_detail}">{VIEW.title}</a>
 					</h4>
 				</div>
-				<div class="col-md-10">
-					<p class="bg-success price">{VIEW.price}</p>
+				<div class="col-md-24">
+					<p class="bg-success price">{VIEW.price} vnđ</p>
+					<div class="pd-5">&nbsp; - {VIEW.area}m²</div>
 				</div>
-				<div class="col-md-7 pd-5">{VIEW.area}m²</div>
-				<div class="col-md-7 pd-5">{VIEW.object_id}</div>
+				
+<!-- 				<div class="col-md-7 pd-5">{VIEW.object_id}</div> -->
 				<div class="col-md-24 locations">
 					<i>{VIEW.locations}</i>
 				</div>
@@ -63,7 +64,7 @@
 					<div class="col-md-14 items_detail">
 						<div class="col-md-24 no-padding text-center">
 							<div class="col-md-10">
-								<p class="bg-success price">{VIEW.price}</p>
+								<p class="bg-success price">{VIEW.price} VNĐ</p>
 							</div>
 							<div class="col-md-7 pd-5">{VIEW.area}m²</div>
 							<div class="col-md-7 pd-5">{VIEW.object_id}</div>
