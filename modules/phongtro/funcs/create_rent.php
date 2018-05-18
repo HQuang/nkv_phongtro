@@ -15,6 +15,19 @@ if ($nv_Request->isset_request('get_alias_title', 'post')) {
     die($alias);
 }
 
+if ($nv_Request->isset_request('load_district', 'post')) {
+    $province_id = $nv_Request->get_int('province_id', 'post,get', 0);
+    
+    $result = get_district($province_id);
+    nv_jsonOutput($result);
+}
+if ($nv_Request->isset_request('load_ward', 'post')) {
+    $district_id = $nv_Request->get_int('district_id', 'post,get', 0);
+    
+    $result = get_ward($district_id);
+    nv_jsonOutput($result);
+}
+
 $row = array();
 $error = array();
 $row['id'] = $nv_Request->get_int('id', 'post,get', 0);
@@ -162,7 +175,7 @@ foreach ($array_province_id_location as $value) {
     ));
     $xtpl->parse('main.select_province_id');
 }
-foreach ($array_district_id_location as $value) {
+foreach (get_district(4) as $value) {
     $xtpl->assign('OPTION', array(
         'key' => $value['districtid'],
         'title' => $value['title'],

@@ -44,3 +44,40 @@ $array_object_id = array(
     1 => $lang_module['object1'],
     2 => $lang_module['object2']
 );
+
+function get_district($id){
+    global $db;
+    $array_district_id_location = array();
+    $_sql = 'SELECT districtid,title FROM nv4_location_district where provinceid = ' . $id;
+    $_query = $db->query($_sql);
+    while ($_row = $_query->fetch()) {
+        $array_district_id_location[$_row['districtid']] = $_row;
+    }
+    
+    return $array_district_id_location;
+}
+function get_ward($id){
+    global $db;    
+    $array_ward_id_location = array();
+    $_sql = 'SELECT wardid,title FROM nv4_location_ward where districtid = ' . $id;
+    $_query = $db->query($_sql);
+    while ($_row = $_query->fetch()) {
+        $array_ward_id_location[$_row['wardid']] = $_row;
+    }
+    
+    return $array_ward_id_location;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

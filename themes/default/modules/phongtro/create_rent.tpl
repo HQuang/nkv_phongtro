@@ -47,7 +47,7 @@
 			</div>
 			<div class="form-group">
 				<div class="col-sm-12 col-md-12">
-					<label class="control-label"><strong>{LANG.price}</strong> <span class="red">(*)</span></label> <input class="form-control" type="number" name="price" value="{ROW.price}" required="required" oninvalid="setCustomValidity( nv_required )" oninput="setCustomValidity('')" placeholder="{LANG.plc_price}" /> 
+					<label class="control-label"><strong>{LANG.price}</strong> <span class="red">(*)</span></label> <input class="form-control" type="number" name="price" value="{ROW.price}" required="required" oninvalid="setCustomValidity( nv_required )" oninput="setCustomValidity('')" placeholder="{LANG.plc_price}" />
 				</div>
 				<div class="col-sm-12 col-md-12">
 					<label class="control-label"><strong>{LANG.object_id}</strong></label> <select class="form-control" name="object_id">
@@ -64,7 +64,7 @@
 		<div class="panel-body">
 			<div class="form-group">
 				<div class="col-sm-12 col-md-12">
-					<label class="control-label"><strong>{LANG.province_id}</strong> <span class="red">(*)</span></label> <select class="form-control" name="province_id">
+					<label class="control-label"><strong>{LANG.province_id}</strong> <span class="red">(*)</span></label> <select class="form-control" name="province_id" id="province_id">
 						<option value="">--- {LANG.choose_province} ---</option>
 						<!-- BEGIN: select_province_id -->
 						<option value="{OPTION.key}"{OPTION.selected}>{OPTION.title}</option>
@@ -72,21 +72,17 @@
 					</select>
 				</div>
 				<div class="col-sm-12 col-md-12">
-					<label class="control-label"><strong>{LANG.district_id}</strong> <span class="red">(*)</span></label> <select class="form-control" name="district_id">
+					<label class="control-label"><strong>{LANG.district_id}</strong> <span class="red">(*)</span></label> <select class="form-control" name="district_id" id="district_id">
 						<option value="">--- {LANG.choose_district} ---</option>
-						<!-- BEGIN: select_district_id -->
-						<option value="{OPTION.key}"{OPTION.selected}>{OPTION.title}</option>
-						<!-- END: select_district_id -->
+						
 					</select>
 				</div>
 			</div>
 			<div class="form-group">
 				<div class="col-sm-12 col-md-12">
-					<label class="control-label"><strong>{LANG.ward_id}</strong> <span class="red">(*)</span></label> <select class="form-control" name="ward_id">
+					<label class="control-label"><strong>{LANG.ward_id}</strong> <span class="red">(*)</span></label> <select class="form-control" name="ward_id" id="ward_id">
 						<option value="">--- {LANG.choose_ward} ---</option>
-						<!-- BEGIN: select_ward_id -->
-						<option value="{OPTION.key}"{OPTION.selected}>{OPTION.title}</option>
-						<!-- END: select_ward_id -->
+						
 					</select>
 				</div>
 				<div class="col-sm-12 col-md-12">
@@ -154,20 +150,65 @@
 		return false;
 	}
 
-	$(".selectfile")
-			.click(
-					function() {
-						var area = "id_img";
-						var path = "{NV_UPLOADS_DIR}/{MODULE_UPLOAD}";
-						var currentpath = "{NV_UPLOADS_DIR}/{MODULE_UPLOAD}";
-						var type = "image";
-						nv_open_browse(script_name + "?" + nv_name_variable
-								+ "=upload&popup=1&area=" + area + "&path="
-								+ path + "&type=" + type + "&currentpath="
-								+ currentpath, "NVImg", 850, 420,
-								"resizable=no,scrollbars=no,toolbar=no,location=no,status=no");
-						return false;
-					});
+	$(".selectfile").click(function() {
+		var area = "id_img";
+		var path = "{NV_UPLOADS_DIR}/{MODULE_UPLOAD}";
+		var currentpath = "{NV_UPLOADS_DIR}/{MODULE_UPLOAD}";
+		var type = "image";
+		nv_open_browse(script_name + "?" + nv_name_variable
+			+ "=upload&popup=1&area=" + area + "&path="
+			+ path + "&type=" + type + "&currentpath="
+			+ currentpath, "NVImg", 850, 420,
+			"resizable=no,scrollbars=no,toolbar=no,location=no,status=no");
+		return false;
+	});
+	
+	
+	$(document).ready(function() {
+		$('#province_id').change(function(){
+			var province_id = $('#province_id').val();
+			load_district(province_id);
+		});
+		
+		$('#district_id').change(function() {
+            var district_id = $('#district_id').val();
+            load_ward(district_id);
+        });
+	});
+	
+	
+	function load_district(province_id){		
+		$.ajax({
+			type : 'POST',
+			url : script_name + '?' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=create_rent&nocache=' + new Date().getTime(),
+			data : 'load_district=1&province_id=' + $('#province_id').val(),
+			success : function(json) {
+				$select = $('#district_id');
+				$select.html('');
+    			$.each(json, function(key, val){
+ 					$select.append('<option value="' + val.districtid + '">' + val.title + '</option>');
+ 				});    			
+			}
+		});	
+		return !1;
+	}
+	function load_ward(district_id){		
+		$.ajax({
+			type : 'POST',
+			url : script_name + '?' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=create_rent&nocache=' + new Date().getTime(),
+			data : 'load_ward=1&district_id=' + $('#district_id').val(),
+			success : function(json) {
+				$select = $('#ward_id');
+				$select.html('');
+    			$.each(json, function(key, val){
+ 					$select.append('<option value="' + val.wardid + '">' + val.title + '</option>');
+ 				});    			
+			}
+		});	
+		return !1;
+	}
+	
+
 	//]]>
 </script>
 <!-- BEGIN: auto_get_alias -->
