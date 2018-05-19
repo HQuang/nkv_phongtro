@@ -68,7 +68,9 @@
 	border-bottom: 1px solid #e73f3f;
 	position: relative;
 }
-
+.pt_items img.img-thumbnail{
+	min-height: 200px;
+}
 .quick_view {
 	position: absolute;
 	bottom: 0;
