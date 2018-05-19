@@ -125,9 +125,11 @@ if ($show_view) {
          } else {
          $view['img'] = '';
          } */
-        
+        if (!empty($view['img'])){
         $view['img'] = nv_resize_crop_images(NV_ROOTDIR . '/' . NV_UPLOADS_DIR . '/' . $module_upload . '/' . $view['img'], 200, 200);
-        
+        }else{
+            $view['img'] = 'http://is4.mzstatic.com/image/pf/us/r30/Purple3/v4/f7/10/9b/f7109b56-4d23-0838-eb82-bb0a4c8c9318/pr_source.jpg';
+        }
         $view['price'] = number_format($view['price']);
         $view['area'] = number_format($view['area']);
         $view['province_id'] = $array_province_id_location[$view['province_id']]['title'];
