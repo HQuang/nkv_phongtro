@@ -91,3 +91,9 @@ $lang_module['create_tessst'] = 'create_tessst';
 //Lang for function main
 $lang_module['user_id'] = 'Người đăng bài';
 $lang_module['addtime'] = 'Thời gian đăng';
+$lang_module['choose_provinceid'] = 'Chọn tỉnh/Thành phố';
+$lang_module['choose_districtid'] = 'Chọn Quận/Huyện';
+$lang_module['choose_wardid'] = 'Chọn Phường/Xã/Thị trấn';
+
+//Lang for function create_test
+$lang_module['create_test'] = 'create_test';

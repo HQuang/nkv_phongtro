@@ -68,3 +68,6 @@ $lang_module['create_tessst'] = 'create_tessst';
 $lang_module['user_id'] = 'User id';
 $lang_module['landlord'] = 'Landlord';
 $lang_module['addtime'] = 'Addtime';
+
+//Lang for function create_test
+$lang_module['create_test'] = 'create_test';

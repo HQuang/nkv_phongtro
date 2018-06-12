@@ -4,12 +4,37 @@
 	<form action="{NV_BASE_SITEURL}index.php" method="get">
 		<input type="hidden" name="{NV_LANG_VARIABLE}" value="{NV_LANG_DATA}" /> <input type="hidden" name="{NV_NAME_VARIABLE}" value="{MODULE_NAME}" /> <input type="hidden" name="{NV_OP_VARIABLE}" value="{OP}" />
 		<div class="row">
-			<div class="col-xs-24 col-md-6">
+			<div class="col-xs-24 col-md-24">
 				<div class="form-group">
 					<input class="form-control" type="text" value="{Q}" name="q" maxlength="255" placeholder="{LANG.search_title}" />
 				</div>
 			</div>
-			<div class="col-xs-12 col-md-3">
+			<div class="col-xs-24 col-md-6">
+				<div class="form-group">
+					<select class="form-control" name="provinceid" id="provinceid">
+						<option value="">--- {LANG.choose_provinceid} ---</option>
+						<!-- BEGIN: provinceid -->
+						<option value="{OPTION.key}"{OPTION.selected}>{OPTION.title}</option>
+						<!-- END: provinceid -->
+					</select>
+				</div>
+			</div>
+			<div class="col-xs-24 col-md-6">
+				<div class="form-group">
+					<select class="form-control" name="districtid" id="districtid">
+						<option value="">--- {LANG.choose_districtid} ---</option>
+					</select>
+				</div>
+			</div>
+			<div class="col-xs-24 col-md-6">
+				<div class="form-group">
+					<select class="form-control" name="wardid" id="wardid">
+						<option value="">--- {LANG.choose_wardid} ---</option>
+					</select>
+				</div>
+			</div>
+			<div id="wardid" class="col-xs-24 col-md-6"></div>
+			<div class="col-xs-12 col-md-6 text-center">
 				<div class="form-group">
 					<input class="btn btn-primary" type="submit" value="{LANG.search_submit}" />
 				</div>
@@ -34,8 +59,7 @@
 					<p class="bg-success price">{VIEW.price} vnđ</p>
 					<div class="pd-5">&nbsp; - {VIEW.area}m²</div>
 				</div>
-				
-<!-- 				<div class="col-md-7 pd-5">{VIEW.object_id}</div> -->
+				<!-- 				<div class="col-md-7 pd-5">{VIEW.object_id}</div> -->
 				<div class="col-md-24 locations">
 					<i>{VIEW.locations}</i>
 				</div>
@@ -59,7 +83,7 @@
 			<div class="modal-body">
 				<div class="row">
 					<div class="col-md-10 product_img">
-						<img src="{VIEW.img}" title="{VIEW.img_alt}" class="img-responsive">
+						<img src="{VIEW.img}" title="{VIEW.img_alt}" width="100%" class="img-responsive">
 					</div>
 					<div class="col-md-14 items_detail">
 						<div class="col-md-24 no-padding text-center">
@@ -77,9 +101,7 @@
 						</b>
 						<div class="space-ten"></div>
 						<div class="btn-ground">
-							<a href="{VIEW.link_detail}" class="btn btn-primary">
-								aaa
-							</a>
+							<a href="{VIEW.link_detail}" class="btn btn-primary"> {LANG.detail} </a>
 						</div>
 					</div>
 				</div>
@@ -112,4 +134,62 @@
 	<!-- END: generate_page -->
 </div>
 <!-- END: view -->
+<script type="text/javascript">
+//<![CDATA[	
+	
+	$(document).ready(function() {
+		var provinceid = $('#provinceid').val();
+		load_district(provinceid);
+		var districtid = $('#districtid').val();
+		load_ward(districtid);
+		
+		$('#provinceid').change(function(){
+			var provinceid = $('#provinceid').val();
+			load_district(provinceid);
+			
+		});
+		$('#districtid').change(function(){
+			var districtid = $('#districtid').val();
+			load_ward(districtid);
+			
+		});
+	});
+	
+	function load_district(provinceid){		
+		$.ajax({
+			type : 'POST',
+			url : script_name + '?' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=main&nocache=' + new Date().getTime(),
+			data : 'load_district=1&provinceid=' + $('#provinceid').val(),
+			success : function(json) {
+				$select = $('#districtid');
+				$select.html('<option value="">--- {LANG.choose_districtid} ---</option>');
+    			$.each(json, function(key, val){
+ 					$select.append('<option value="' + val.districtid + '">' + val.title + '</option>');
+ 				});
+
+//     			var districtid = $('#districtid').val();
+//     			load_ward(districtid);
+			}
+		});	
+		return !1;
+	}
+	function load_ward(districtid){		
+		$.ajax({
+			type : 'POST',
+			url : script_name + '?' + nv_name_variable + '=' + nv_module_name + '&' + nv_fc_variable + '=main&nocache=' + new Date().getTime(),
+			data : 'load_ward=1&districtid=' + $('#districtid').val(),
+			success : function(json) {
+				$select = $('#wardid');
+				$select.html('<option value="">--- {LANG.choose_wardid} ---</option>');
+    			$.each(json, function(key, val){
+ 					$select.append('<option value="' + val.wardid + '">' + val.title + '</option>');
+ 				});
+
+			}
+		});	
+		return !1;
+	}
+
+//]]>
+</script>
 <!-- END: main -->

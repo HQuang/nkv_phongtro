@@ -1,4 +1,6 @@
 <!-- BEGIN: main -->
+<link rel="stylesheet" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/select2/select2.min.css">
+<link rel="stylesheet" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/select2/select2-bootstrap.min.css">
 <!-- BEGIN: error -->
 <div class="alert alert-warning">{ERROR}</div>
 <!-- END: error -->
@@ -74,13 +76,15 @@
 				<div class="col-sm-12 col-md-12">
 					<label class="control-label"><strong>{LANG.district_id}</strong> <span class="red">(*)</span></label> <select class="form-control" name="district_id" id="district_id">
 						<option value="">--- {LANG.choose_district} ---</option>
-						
+						<!-- BEGIN: select_district_id -->
+						<option value="{OPTION.key}"{OPTION.selected} >{OPTION.title}</option>
+						<!-- END: select_district_id -->
 					</select>
 				</div>
 			</div>
 			<div class="form-group">
 				<div class="col-sm-12 col-md-12">
-					<label class="control-label"><strong>{LANG.ward_id}</strong> <span class="red">(*)</span></label> <select class="form-control" name="ward_id" id="ward_id">
+					<label class="control-label"><strong>{LANG.ward_id}</strong> </label> <select class="form-control" name="ward_id" id="ward_id">
 						<option value="">--- {LANG.choose_ward} ---</option>
 						
 					</select>
@@ -111,7 +115,7 @@
 				<div class="col-sm-24 col-md-24">
 					<label class="control-label"><strong>{LANG.img}</strong></label>
 					<div class="input-group">
-						<input type="file" name="upload_fileupload" id="upload_fileupload" style="display: none" /> <input type="text" class="form-control" id="file_name" disabled> <span class="input-group-btn">
+						<input type="file" name="upload_fileupload" id="upload_fileupload" style="display: none" /> <input type="text" class="form-control" id="file_name" disabled value="{ROW.img}"> <span class="input-group-btn">
 							<button class="btn btn-default" onclick="$('#upload_fileupload').click();" type="button">
 								<em class="fa fa-folder-open-o fa-fix">&nbsp;</em> {LANG.file_selectfile}
 							</button>
@@ -128,6 +132,8 @@
 		<input class="btn btn-success" name="submit" type="submit" value="{LANG.save}" />
 	</div>
 </form>
+<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/select2/select2.min.js"></script>
+<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/select2/i18n/{NV_LANG_INTERFACE}.js"></script>
 <script src="http://afarkas.github.io/webshim/js-webshim/minified/polyfiller.js"></script>
 <script type="text/javascript">
 	//<![CDATA[
@@ -165,6 +171,13 @@
 	
 	
 	$(document).ready(function() {
+		$('#country_id, #province_id, #district_id, #ward_id').select2({
+	        theme: 'bootstrap',
+	        language: '{NV_LANG_INTERFACE}'
+	    });
+		
+		var province_id = $('#province_id').val();
+		load_district(province_id);
 		$('#province_id').change(function(){
 			var province_id = $('#province_id').val();
 			load_district(province_id);
@@ -184,7 +197,7 @@
 			data : 'load_district=1&province_id=' + $('#province_id').val(),
 			success : function(json) {
 				$select = $('#district_id');
-				$select.html('');
+				$select.html('<option value="">--- {LANG.choose_district} ---</option>');
     			$.each(json, function(key, val){
  					$select.append('<option value="' + val.districtid + '">' + val.title + '</option>');
  				});    			
@@ -199,7 +212,7 @@
 			data : 'load_ward=1&district_id=' + $('#district_id').val(),
 			success : function(json) {
 				$select = $('#ward_id');
-				$select.html('');
+				$select.html('<option value="">--- {LANG.choose_ward} ---</option>');
     			$.each(json, function(key, val){
  					$select.append('<option value="' + val.wardid + '">' + val.title + '</option>');
  				});    			

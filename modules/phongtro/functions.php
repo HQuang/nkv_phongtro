@@ -20,32 +20,34 @@ function nv_resize_crop_images($img_path, $width, $height, $module_name = '', $i
         $basename = preg_replace('/^\W+|\W+$/', '', $basename);
         $basename = preg_replace('/[ ]+/', '_', $basename);
         $basename = strtolower(preg_replace('/\W-/', '', $basename));
-        if ($imginfo['width'] > $width or $imginfo['height'] > $height) {
-            $basename = preg_replace('/(.*)(\.[a-zA-Z]+)$/', $module_name . '_' . $id . '_\1_' . $width . '-' . $height . '\2', $basename);
-            if (file_exists(NV_ROOTDIR . '/' . NV_TEMP_DIR . '/' . $basename)) {
-                $new_img_path = NV_BASE_SITEURL . NV_TEMP_DIR . '/' . $basename;
-            } else {
-                $img_path = new NukeViet\Files\Image($img_path, NV_MAX_WIDTH, NV_MAX_HEIGHT);
-                
-                $thumb_width = $width;
-                $thumb_height = $height;
-                $maxwh = max($thumb_width, $thumb_height);
-                if ($img_path->fileinfo['width'] > $img_path->fileinfo['height']) {
-                    $width = 0;
-                    $height = $maxwh;
-                } else {
-                    $width = $maxwh;
-                    $height = 0;
-                }
-                
-                $img_path->resizeXY($width, $height);
-                $img_path->cropFromCenter($thumb_width, $thumb_height);
-                $img_path->save(NV_ROOTDIR . '/' . NV_TEMP_DIR, $basename);
+        
+            if ($imginfo['width'] > $width or $imginfo['height'] > $height) {
+                $basename = preg_replace('/(.*)(\.[a-zA-Z]+)$/', $module_name . '_' . $id . '_\1_' . $width . '-' . $height . '\2', $basename);
                 if (file_exists(NV_ROOTDIR . '/' . NV_TEMP_DIR . '/' . $basename)) {
                     $new_img_path = NV_BASE_SITEURL . NV_TEMP_DIR . '/' . $basename;
+                } else {
+                    $img_path = new NukeViet\Files\Image($img_path, NV_MAX_WIDTH, NV_MAX_HEIGHT);
+                    
+                    $thumb_width = $width;
+                    $thumb_height = $height;
+                    $maxwh = max($thumb_width, $thumb_height);
+                    if ($img_path->fileinfo['width'] > $img_path->fileinfo['height']) {
+                        $width = 0;
+                        $height = $maxwh;
+                    } else {
+                        $width = $maxwh;
+                        $height = 0;
+                    }
+                    
+                    $img_path->resizeXY($width, $height);
+                    $img_path->cropFromCenter($thumb_width, $thumb_height);
+                    $img_path->save(NV_ROOTDIR . '/' . NV_TEMP_DIR, $basename);
+                    if (file_exists(NV_ROOTDIR . '/' . NV_TEMP_DIR . '/' . $basename)) {
+                        $new_img_path = NV_BASE_SITEURL . NV_TEMP_DIR . '/' . $basename;
+                    }
                 }
             }
-        }
+       
     }
     return $new_img_path;
 }

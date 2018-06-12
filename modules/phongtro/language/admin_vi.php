@@ -40,3 +40,10 @@ $lang_module['ward_id'] = 'Đường';
 $lang_module['address'] = 'Địa chỉ';
 $lang_module['note'] = 'Nội dung';
 $lang_module['img'] = 'Hình ảnh';
+
+//Lang for function create_test
+$lang_module['create_test'] = 'create_test';
+$lang_module['user_id'] = 'Người đăng bài';
+$lang_module['landlord'] = 'Chủ nhà';
+$lang_module['img_alt'] = 'Chú thích ảnh';
+$lang_module['addtime'] = 'Thời gian đăng';

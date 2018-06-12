@@ -8,8 +8,13 @@
  */
 if (!defined('NV_MAINFILE')) die('Stop!!!');
 
+require_once NV_ROOTDIR . '/modules/location/location.class.php';
+$location = new Location();
+$location->set('IsDistrict', true);
+$location->set('IsWard', true);
+
 $array_province_id_location = array();
-$_sql = 'SELECT provinceid,title FROM nv4_location_province';
+$_sql = 'SELECT provinceid,title FROM nv4_location_province where status=1';
 $_query = $db->query($_sql);
 while ($_row = $_query->fetch()) {
     $array_province_id_location[$_row['provinceid']] = $_row;

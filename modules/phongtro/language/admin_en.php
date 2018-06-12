@@ -39,3 +39,10 @@ $lang_module['ward_id'] = 'Ward id';
 $lang_module['address'] = 'Address';
 $lang_module['note'] = 'Note';
 $lang_module['img'] = 'Img';
+
+//Lang for function create_test
+$lang_module['create_test'] = 'create_test';
+$lang_module['user_id'] = 'User id';
+$lang_module['landlord'] = 'Landlord';
+$lang_module['img_alt'] = 'Img alt';
+$lang_module['addtime'] = 'Addtime';

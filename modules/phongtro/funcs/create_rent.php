@@ -8,6 +8,10 @@
  * @Createdate Sun, 13 May 2018 08:36:13 GMT
  */
 if (!defined('NV_IS_MOD_PHONGTRO')) die('Stop!!!');
+if (empty($user_info['userid'])){
+    Header('Location: ' . NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=users');
+    die();
+}
 
 if ($nv_Request->isset_request('get_alias_title', 'post')) {
     $alias = $nv_Request->get_title('get_alias_title', 'post', '');
@@ -48,7 +52,7 @@ if ($nv_Request->isset_request('submit', 'post')) {
     $row['note'] = $nv_Request->get_string('note', 'post', '');
     $row['img'] = $nv_Request->get_title('img', 'post', '');
     $row['img_alt'] = $nv_Request->get_title('img_alt', 'post', '');
-    
+
     $row['files'] = '';
     if (isset($_FILES['upload_fileupload']) and is_uploaded_file($_FILES['upload_fileupload']['tmp_name'])) {
         $upload = new NukeViet\Files\Upload($global_config['file_allowed_ext'], $global_config['forbid_extensions'], $global_config['forbid_mimes'], $global_config['nv_max_size'], NV_MAX_WIDTH, NV_MAX_HEIGHT);
@@ -78,8 +82,6 @@ if ($nv_Request->isset_request('submit', 'post')) {
         $error[] = $lang_module['error_required_province_id'];
     } elseif (empty($row['district_id'])) {
         $error[] = $lang_module['error_required_district_id'];
-    } elseif (empty($row['ward_id'])) {
-        $error[] = $lang_module['error_required_ward_id'];
     } elseif (empty($row['address'])) {
         $error[] = $lang_module['error_required_address'];
     } elseif (empty($row['note'])) {
@@ -90,20 +92,22 @@ if ($nv_Request->isset_request('submit', 'post')) {
         try {
             if (empty($row['id'])) {
                 
+                $row['user_id'] = $user_info['userid'];
                 $row['country_id'] = 0;
                 $row['weight'] = 0;
                 $row['active'] = 0;
                 $row['addtime'] = NV_CURRENTTIME;
                 
-                $stmt = $db->prepare('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_create (title, alias, cat_id, phone, landlord, price, area, object_id, country_id, province_id, district_id, ward_id, address, note, img, img_alt, addtime, weight, active) VALUES (:title, :alias, :cat_id, :phone, :landlord, :price, :area, :object_id, :country_id, :province_id, :district_id, :ward_id, :address, :note, :img, :img_alt, :addtime, :weight, :active)');
+                $stmt = $db->prepare('INSERT INTO ' . NV_PREFIXLANG . '_' . $module_data . '_create (user_id, title, alias, cat_id, phone, landlord, price, area, object_id, country_id, province_id, district_id, ward_id, address, note, img, img_alt, addtime, weight, active) VALUES (:user_id, :title, :alias, :cat_id, :phone, :landlord, :price, :area, :object_id, :country_id, :province_id, :district_id, :ward_id, :address, :note, :img, :img_alt, :addtime, :weight, :active)');
                 
                 $stmt->bindParam(':addtime', $row['addtime'], PDO::PARAM_INT);
                 $stmt->bindParam(':country_id', $row['country_id'], PDO::PARAM_INT);
                 $stmt->bindParam(':weight', $row['weight'], PDO::PARAM_INT);
                 $stmt->bindParam(':active', $row['active'], PDO::PARAM_INT);
             } else {
-                $stmt = $db->prepare('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_create SET title = :title, alias = :alias, cat_id = :cat_id, phone = :phone, landlord = :landlord, price = :price, area = :area, object_id = :object_id, province_id = :province_id, district_id = :district_id, ward_id = :ward_id, address = :address, note = :note, img = :img, img_alt = :img_alt WHERE id=' . $row['id']);
+                $stmt = $db->prepare('UPDATE ' . NV_PREFIXLANG . '_' . $module_data . '_create SET user_id = :user_id, title = :title, alias = :alias, cat_id = :cat_id, phone = :phone, landlord = :landlord, price = :price, area = :area, object_id = :object_id, province_id = :province_id, district_id = :district_id, ward_id = :ward_id, address = :address, note = :note, img = :img, img_alt = :img_alt WHERE id=' . $row['id']);
             }
+            $stmt->bindParam(':user_id', $row['user_id'], PDO::PARAM_INT);
             $stmt->bindParam(':title', $row['title'], PDO::PARAM_STR);
             $stmt->bindParam(':alias', $row['alias'], PDO::PARAM_STR);
             $stmt->bindParam(':cat_id', $row['cat_id'], PDO::PARAM_INT);
@@ -123,7 +127,7 @@ if ($nv_Request->isset_request('submit', 'post')) {
             $exc = $stmt->execute();
             if ($exc) {
                 $nv_Cache->delMod($module_name);
-                Header('Location: ' . NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '&' . NV_OP_VARIABLE . '=' . $op);
+                Header('Location: ' . nv_url_rewrite(NV_BASE_SITEURL . 'index.php?' . NV_LANG_VARIABLE . '=' . NV_LANG_DATA . '&' . NV_NAME_VARIABLE . '=' . $module_name . '', true));
                 die();
             }
         } catch (PDOException $e) {
@@ -175,7 +179,7 @@ foreach ($array_province_id_location as $value) {
     ));
     $xtpl->parse('main.select_province_id');
 }
-foreach (get_district(4) as $value) {
+foreach ($array_district_id_location as $value) {
     $xtpl->assign('OPTION', array(
         'key' => $value['districtid'],
         'title' => $value['title'],

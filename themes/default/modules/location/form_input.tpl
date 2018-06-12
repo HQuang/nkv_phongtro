@@ -19,24 +19,19 @@
 <input type="hidden" id="index_{CONFIG.index}" value="{CONFIG.index}" />
 <input type="hidden" id="col_class_{CONFIG.index}" value="{CONFIG.col_class}" />
 
-<div id="form-input-{CONFIG.index}">{FORM_INPUT}</div>
+<div id="form-input-{CONFIG.index}" class="col-md-24">{FORM_INPUT}</div>
 <!-- END: main -->
 
 <!-- BEGIN: form_input -->
-
-<!-- BEGIN: select2 -->
 <link rel="stylesheet" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/select2/select2.min.css">
 <link rel="stylesheet" href="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/select2/select2-bootstrap.min.css">
-<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/select2/select2.min.js"></script>
-<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/select2/i18n/{NV_LANG_INTERFACE}.js"></script>
-<!-- END: select2 -->
 
 <div class="row location-row">
 	<!-- BEGIN: country -->
 	<div class="{CONFIG.col_class} m-bottom country">
-		<select class="form-control location" data-type="countryid" name="{CONFIG.name_country}" id="countryid-{CONFIG.index}">
+<!-- 		<select class="form-control" name="{CONFIG.name_country}" id="countryid-{CONFIG.index}"> -->
 			<!-- BEGIN: blank_title -->
-			<option value="0">---{LANG.country_cc}---</option>
+<!-- 			<option value="0">---{LANG.country_cc}---</option> -->
 			<!-- END: blank_title -->
 			<!-- BEGIN: loop -->
 			<option value="{COUNTRY.countryid}"{COUNTRY.selected}>{COUNTRY.title}</option>
@@ -50,13 +45,14 @@
 
 	<!-- BEGIN: province -->
 	<div class="{CONFIG.col_class} m-bottom province">
-		<select class="form-control location" data-type="provinceid"
+		<select class="form-control"
 			<!-- BEGIN: none_multiple -->name="{CONFIG.name_province}"
 			<!-- END: none_multiple --> id="provinceid-{CONFIG.index}"
 			<!-- BEGIN: multiple -->name="{CONFIG.name_province}[]" multiple="multiple"
 			<!-- END: multiple --> >
-			<!-- BEGIN: blank_title -->
 			<option value="0">---{LANG.province_cc}---</option>
+			<!-- BEGIN: blank_title -->
+<!-- 			<option value="0">---{LANG.province_cc}---</option> -->
 			<!-- END: blank_title -->
 			<!-- BEGIN: loop -->
 			<option value="{PROVINCE.provinceid}"{PROVINCE.selected}><!-- BEGIN: type -->{PROVINCE.type}
@@ -69,13 +65,14 @@
 
 	<!-- BEGIN: district -->
 	<div class="{CONFIG.col_class} m-bottom district">
-		<select class="form-control location" data-type="districtid"
+		<select class="form-control"
 			<!-- BEGIN: none_multiple -->name="{CONFIG.name_district}"
 			<!-- END: none_multiple --> id="districtid-{CONFIG.index}"
 			<!-- BEGIN: multiple -->name="{CONFIG.name_district}[]" multiple="multiple"
 			<!-- END: multiple --> >
-			<!-- BEGIN: blank_title -->
 			<option value="0">---{LANG.district_cc}---</option>
+			<!-- BEGIN: blank_title -->
+<!-- 			<option value="0">---{LANG.district_cc}---</option> -->
 			<!-- END: blank_title -->
 			<!-- BEGIN: loop -->
 			<option value="{DISTRICT.districtid}"{DISTRICT.selected}><!-- BEGIN: type -->{DISTRICT.type}
@@ -88,13 +85,14 @@
 
 	<!-- BEGIN: ward -->
 	<div class="{CONFIG.col_class} m-bottom ward">
-		<select class="form-control location" data-type="wardid"
+		<select class="form-control"
 			<!-- BEGIN: none_multiple -->name="{CONFIG.name_ward}"
 			<!-- END: none_multiple --> id="wardid-{CONFIG.index}"
 			<!-- BEGIN: multiple -->name="{CONFIG.name_ward}[]" multiple="multiple"
 			<!-- END: multiple --> >
-			<!-- BEGIN: blank_title -->
 			<option value="0">---{LANG.ward_cc}---</option>
+			<!-- BEGIN: blank_title -->
+<!-- 			<option value="0">---{LANG.ward_cc}---</option> -->
 			<!-- END: blank_title -->
 			<!-- BEGIN: loop -->
 			<option value="{WARD.wardid}"{WARD.selected}><!-- BEGIN: type -->{WARD.type}
@@ -105,6 +103,8 @@
 	</div>
 	<!-- END: ward -->
 </div>
+<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/select2/select2.min.js"></script>
+<script type="text/javascript" src="{NV_BASE_SITEURL}{NV_ASSETS_DIR}/js/select2/i18n/{NV_LANG_INTERFACE}.js"></script>
 <script>
 $(document).ready(function() {
     $('#countryid-{CONFIG.index}, #provinceid-{CONFIG.index}, #districtid-{CONFIG.index}, #wardid-{CONFIG.index}').select2({
@@ -121,51 +121,33 @@ $(document).ready(function() {
                 $('#form-input-{CONFIG.index}').html( res );
             }
         });
-        
-		if(typeof nv_location_change === 'function'){
-			nv_location_change('countryid', $(this).val());
-    	}
     });
 
-    $('#provinceid-{CONFIG.index}').change(function(){
-		if( $('#districtid-{CONFIG.index}').length > 0 ){
-			$(this).val() != 0 && $.ajax({
-		        method: 'POST',
-		        url : nv_base_siteurl + 'index.php?' + nv_lang_variable + '=' + nv_lang_data + '&' + nv_name_variable + '=location',
-		        data : nv_location_build_query({CONFIG.index}),
-		        success : function( res ){
-		            $('#form-input-{CONFIG.index}').html( res );
-		        }
-			});
-		}
+    if( $('#districtid-{CONFIG.index}').length > 0 ){
+        $('#provinceid-{CONFIG.index}').change(function(){
+            $(this).val() != 0 && $.ajax({
+                method: 'POST',
+                url : nv_base_siteurl + 'index.php?' + nv_lang_variable + '=' + nv_lang_data + '&' + nv_name_variable + '=location',
+                data : nv_location_build_query({CONFIG.index}),
+                success : function( res ){
+                    $('#form-input-{CONFIG.index}').html( res );
+                }
+            });
+        });
+    }
 
-		if(typeof nv_location_change === 'function'){
-			nv_location_change('provinceid', $(this).val());
-    	}
-    });
-    
-	$('#districtid-{CONFIG.index}').change(function(){
-		if( $('#wardid-{CONFIG.index}').length > 0 ){
-			$(this).val() != 0 && $.ajax({
-		        method: 'POST',
-		        url : nv_base_siteurl + 'index.php?' + nv_lang_variable + '=' + nv_lang_data + '&' + nv_name_variable + '=location',
-		        data : nv_location_build_query({CONFIG.index}),
-		        success : function( res ){
-		            $('#form-input-{CONFIG.index}').html( res );
-		        }
-		    });
-		}
-		
-		if(typeof nv_location_change === 'function'){
-    		nv_location_change('districtid', $(this).val());
-    	}
-	});
-	
-	$('#wardid-{CONFIG.index}').change(function(){
-		if(typeof nv_location_change === 'function'){
-			nv_location_change('wardidid', $(this).val());
-    	}		
-	});
+    if( $('#wardid-{CONFIG.index}').length > 0 ){
+        $('#districtid-{CONFIG.index}').change(function(){
+            $(this).val() != 0 && $.ajax({
+                method: 'POST',
+                url : nv_base_siteurl + 'index.php?' + nv_lang_variable + '=' + nv_lang_data + '&' + nv_name_variable + '=location',
+                data : nv_location_build_query({CONFIG.index}),
+                success : function( res ){
+                    $('#form-input-{CONFIG.index}').html( res );
+                }
+            });
+        });
+    }
 });
 
 if (typeof nv_location_build_query != 'function'){
